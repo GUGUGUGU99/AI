@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Archive</title>
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+  <!-- 상단 -->
+  <header class="top-header">
+
+    <div class="logo-area">
+
+      <div class="logo">
+        AI
+      </div>
+
+      <div>
+        <h1>AI 아카이브</h1>
+        <p>AI · 연구 · 개발 · 실험 기록 채널</p>
+      </div>
+
+    </div>
+
+    <div class="header-buttons">
+      <button>채널위키</button>
+      <button>알림</button>
+      <button class="subscribe-btn">+ 구독</button>
+    </div>
+
+  </header>
+
+  <!-- 배너 -->
+  <section class="banner">
+    <h2>AI ARCHIVE</h2>
+    <p>AI Research & Development Community</p>
+  </section>
+
+  <!-- 메인 -->
+  <main class="layout">
+
+    <section class="main-content">
+
+      <!-- 메뉴 -->
+      <nav class="channel-menu">
+        <button class="active">전체</button>
+      </nav>
+
+      <!-- 글쓰기 버튼 -->
+      <div class="write-area">
+        <button class="write-btn">✏ 글쓰기</button>
+      </div>
+
+      <!-- 게시판 -->
+      <table class="board">
+
+        <thead>
+          <tr>
+            <th>번호</th>
+            <th>제목</th>
+            <th>작성자</th>
+            <th>작성일</th>
+            <th>조회수</th>
+          </tr>
+        </thead>
+
+        <tbody>
+
+          <tr>
+            <td colspan="5" class="empty-post">
+              아직 작성된 게시글이 없습니다.
+            </td>
+          </tr>
+
+        </tbody>
+
+      </table>
+
+    </section>
+
+  </main>
+
+</body>
+</html>
