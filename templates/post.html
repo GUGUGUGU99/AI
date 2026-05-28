@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>{{ post.title }} - AI Archive</title>
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+  <!-- 상단 -->
+
+  <header class="top-header">
+
+    <div class="logo-area">
+
+      <a href="/" class="logo-link">
+        <div class="logo">AI</div>
+      </a>
+
+      <div>
+        <h1>AI 아카이브</h1>
+      </div>
+
+    </div>
+
+  </header>
+
+  <!-- 메인 -->
+
+  <main class="layout">
+
+    <!-- 게시글 -->
+
+    <article class="post-detail">
+
+      <h2>{{ post.title }}</h2>
+
+      <div class="post-info">
+
+        <span>
+          작성자: {{ post.author }}
+        </span>
+
+        <span>
+          작성일: {{ post.date }}
+        </span>
+
+        <span>
+          조회수: {{ post.views }}
+        </span>
+
+      </div>
+
+      <div class="post-content">
+        {{ post.content | safe }}
+      </div>
+
+      <!-- 첨부파일 -->
+
+      {% if post.saved_file_name %}
+
+        <div class="attached-file">
+
+          <p>
+            첨부파일: {{ post.file_name }}
+          </p>
+
+          <a
+            href="{{ url_for('download_file', filename=post.saved_file_name) }}"
+            class="write-btn"
+          >
+            파일 다운로드
+          </a>
+
+        </div>
+
+      {% endif %}
+
+      <!-- 버튼 -->
+
+      <div class="post-buttons">
+
+        <a href="/" class="write-btn">
+          목록으로
+        </a>
+
+        <div class="post-action-buttons">
+
+          <a
+            href="/edit/{{ post.id }}"
+            class="edit-btn"
+          >
+            게시글 수정
+          </a>
+
+          <form
+            method="POST"
+            action="/delete/{{ post.id }}"
+            onsubmit="return confirm('정말 게시글을 삭제하시겠습니까?');"
+          >
+
+            <button
+              type="submit"
+              class="delete-btn"
+            >
+              게시글 삭제
+            </button>
+
+          </form>
+
+        </div>
+
+      </div>
+
+    </article>
+
+    <!-- 댓글 -->
+
+    <section class="comment-section">
+
+      <h3>댓글</h3>
+
+      <!-- 댓글 작성 -->
+
+      <form
+        class="comment-form"
+        method="POST"
+        action="/comment/{{ post.id }}"
+        enctype="multipart/form-data"
+      >
+
+        <input
+          type="text"
+          name="author"
+          placeholder="닉네임"
+          required
+        >
+
+        <textarea
+          name="content"
+          placeholder="댓글을 입력하세요"
+          required
+        ></textarea>
+
+        <div class="file-box">
+
+          <label>
+            댓글 이미지 / 움짤 / 파일 첨부
+          </label>
+
+          <input type="file" name="file">
+
+        </div>
+
+        <div class="write-area">
+
+          <button
+            type="submit"
+            class="write-btn"
+          >
+            댓글 등록
+          </button>
+
+        </div>
+
+      </form>
+
+      <!-- 댓글 목록 -->
+
+      <div class="comment-list">
+
+        {% if comments %}
+
+          {% for comment in comments %}
+
+            <div class="comment-item">
+
+              <div class="comment-top">
+
+                <strong>
+                  {{ comment.author }}
+                </strong>
+
+                <span>
+                  {{ comment.date }}
+                </span>
+
+              </div>
+
+              <div class="comment-content">
+                {{ comment.content }}
+              </div>
+
+              <!-- 댓글 첨부 -->
+
+              {% if comment.saved_file_name %}
+
+                <div class="comment-file">
+
+                  <img
+                    src="{{ url_for('uploaded_file', filename=comment.saved_file_name) }}"
+                    alt="댓글 첨부 이미지"
+                    class="comment-image"
+                    onerror="this.style.display='none';"
+                  >
+
+                  <a
+                    href="{{ url_for('download_file', filename=comment.saved_file_name) }}"
+                    class="mini-download-btn"
+                  >
+                    첨부파일 다운로드
+                  </a>
+
+                </div>
+
+              {% endif %}
+
+              <!-- 댓글 삭제 -->
+
+              <form
+                method="POST"
+                action="/delete_comment/{{ comment.id }}/{{ post.id }}"
+                onsubmit="return confirm('댓글을 삭제하시겠습니까?');"
+              >
+
+                <button
+                  type="submit"
+                  class="comment-delete-btn"
+                >
+                  댓글 삭제
+                </button>
+
+              </form>
+
+            </div>
+
+          {% endfor %}
+
+        {% else %}
+
+          <p class="no-comment">
+            아직 댓글이 없습니다.
+          </p>
+
+        {% endif %}
+
+      </div>
+
+    </section>
+
+  </main>
+
+</body>
+</html>
+```

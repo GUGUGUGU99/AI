@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>게시글 수정 - AI Archive</title>
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+  <header class="top-header">
+    <div class="logo-area">
+
+      <a href="/" class="logo-link">
+        <div class="logo">AI</div>
+      </a>
+
+      <div>
+        <h1>게시글 수정</h1>
+        <p>작성한 게시글을 수정합니다.</p>
+      </div>
+
+    </div>
+  </header>
+
+  <main class="layout">
+
+    <form
+      class="write-form"
+      method="POST"
+      action="/edit/{{ post.id }}"
+      onsubmit="saveEditorContent()"
+    >
+
+      <input
+        type="text"
+        name="author"
+        value="{{ post.author }}"
+        placeholder="닉네임을 입력하세요"
+        required
+      >
+
+      <input
+        type="text"
+        name="title"
+        value="{{ post.title }}"
+        placeholder="제목을 입력하세요"
+        required
+      >
+
+      <div class="editor-toolbar">
+
+        <button type="button" onclick="formatText('bold')">
+          굵게
+        </button>
+
+        <button type="button" onclick="formatText('italic')">
+          기울임
+        </button>
+
+        <button type="button" onclick="formatText('underline')">
+          밑줄
+        </button>
+
+        <button type="button" onclick="formatText('insertUnorderedList')">
+          목록
+        </button>
+
+        <input
+          type="number"
+          id="fontSizeInput"
+          value="16"
+          min="8"
+          max="80"
+          class="font-size-input"
+        >
+
+        <button type="button" onclick="applyFontSize()">
+          글자 크기 적용
+        </button>
+
+        <button type="button" onclick="insertImage()">
+          이미지 넣기
+        </button>
+
+      </div>
+
+      <div id="editor" class="editor" contenteditable="true">{{ post.content | safe }}</div>
+
+      <input type="hidden" name="content" id="content">
+
+      <input
+        type="file"
+        id="imageInput"
+        accept="image/*"
+        style="display:none"
+      >
+
+      {% if post.saved_file_name %}
+        <div class="file-box">
+
+          <label>현재 첨부파일</label>
+
+          <p>
+            {{ post.file_name }}
+          </p>
+
+          <label class="delete-file-label">
+            <input type="checkbox" name="delete_file">
+            첨부파일 삭제
+          </label>
+
+        </div>
+      {% endif %}
+
+      <div class="post-buttons">
+
+        <a href="/post/{{ post.id }}" class="write-btn">
+          취소
+        </a>
+
+        <button type="submit" class="edit-btn">
+          수정 완료
+        </button>
+
+      </div>
+
+    </form>
+
+  </main>
+
+  <script src="{{ url_for('static', filename='editor.js') }}"></script>
+
+</body>
+</html>

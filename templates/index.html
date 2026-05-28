@@ -10,55 +10,48 @@
 
 <body>
 
-  <!-- 상단 -->
   <header class="top-header">
 
     <div class="logo-area">
 
-      <div class="logo">
-        AI
-      </div>
+      <a
+        href="javascript:void(0)"
+        class="logo-link"
+        onclick="location.reload()"
+      >
+        <div class="logo">AI</div>
+      </a>
 
       <div>
         <h1>AI 아카이브</h1>
-        <p>AI · 연구 · 개발 · 실험 기록 채널</p>
       </div>
 
-    </div>
-
-    <div class="header-buttons">
-      <button>채널위키</button>
-      <button>알림</button>
-      <button class="subscribe-btn">+ 구독</button>
     </div>
 
   </header>
 
-  <!-- 배너 -->
-  <section class="banner">
-    <h2>AI ARCHIVE</h2>
-    <p>AI Research & Development Community</p>
-  </section>
+  <section class="banner"></section>
 
-  <!-- 메인 -->
   <main class="layout">
 
     <section class="main-content">
 
-      <!-- 메뉴 -->
       <nav class="channel-menu">
         <button class="active">전체</button>
       </nav>
 
-      <!-- 글쓰기 버튼 -->
       <div class="write-area">
-        <button class="write-btn">✏ 글쓰기</button>
+
+        <a href="/write" class="write-btn">
+          ✏ 글쓰기
+        </a>
+
       </div>
 
-      <!-- 게시판 -->
       <table class="board">
 
         <thead>
+
           <tr>
             <th>번호</th>
             <th>제목</th>
@@ -66,23 +59,184 @@
             <th>작성일</th>
             <th>조회수</th>
           </tr>
+
         </thead>
 
         <tbody>
 
-          <tr>
-            <td colspan="5" class="empty-post">
-              아직 작성된 게시글이 없습니다.
-            </td>
-          </tr>
+          {% if posts %}
+
+            {% for post in posts %}
+
+              <tr>
+
+                <td>
+                  {{ post.id }}
+                </td>
+
+                <td>
+
+                  <a
+                    href="/post/{{ post.id }}"
+                    class="post-title"
+
+                    {% if post.saved_file_name %}
+                      data-image="/uploads/{{ post.saved_file_name }}"
+                    {% endif %}
+                  >
+                    {{ post.title }}
+                  </a>
+
+                </td>
+
+                <td>
+                  {{ post.author }}
+                </td>
+
+                <td>
+                  {{ post.date }}
+                </td>
+
+                <td>
+                  {{ post.views }}
+                </td>
+
+              </tr>
+
+            {% endfor %}
+
+          {% else %}
+
+            <tr>
+
+              <td colspan="5" class="empty-post">
+                아직 작성된 게시글이 없습니다.
+              </td>
+
+            </tr>
+
+          {% endif %}
 
         </tbody>
 
       </table>
 
+      <!-- 검색 -->
+
+      <div class="bottom-tools">
+
+        <form class="search-form" method="GET" action="/">
+
+          <select name="search_type">
+
+            <option
+              value="title"
+              {% if search_type == "title" %}selected{% endif %}
+            >
+              제목
+            </option>
+
+            <option
+              value="author"
+              {% if search_type == "author" %}selected{% endif %}
+            >
+              작성자
+            </option>
+
+          </select>
+
+          <input
+            type="text"
+            name="keyword"
+            value="{{ keyword }}"
+            placeholder="검색어 입력"
+          >
+
+          <button type="submit">
+            검색
+          </button>
+
+        </form>
+
+        <!-- 페이지 -->
+
+        <div class="pagination">
+
+          {% if page > 1 %}
+
+            <a
+              href="/?page={{ page - 1 }}&search_type={{ search_type }}&keyword={{ keyword }}"
+            >
+              ‹
+            </a>
+
+          {% endif %}
+
+          {% for p in range(1, total_pages + 1) %}
+
+            <a
+              href="/?page={{ p }}&search_type={{ search_type }}&keyword={{ keyword }}"
+              class="{% if p == page %}active-page{% endif %}"
+            >
+              {{ p }}
+            </a>
+
+          {% endfor %}
+
+          {% if page < total_pages %}
+
+            <a
+              href="/?page={{ page + 1 }}&search_type={{ search_type }}&keyword={{ keyword }}"
+            >
+              ›
+            </a>
+
+          {% endif %}
+
+        </div>
+
+      </div>
+
     </section>
 
   </main>
 
+  <!-- 이미지 미리보기 -->
+
+  <div id="image-preview"></div>
+
+  <script>
+
+    const preview = document.getElementById("image-preview");
+
+    document.querySelectorAll(".post-title").forEach(title => {
+
+      title.addEventListener("mousemove", e => {
+
+        const image = title.dataset.image;
+
+        if (!image) {
+          preview.style.display = "none";
+          return;
+        }
+
+        preview.innerHTML = `<img src="${image}">`;
+
+        preview.style.display = "block";
+
+        preview.style.left = e.pageX + 20 + "px";
+        preview.style.top = e.pageY + 20 + "px";
+
+      });
+
+      title.addEventListener("mouseleave", () => {
+        preview.style.display = "none";
+      });
+
+    });
+
+  </script>
+
 </body>
 </html>
+```
